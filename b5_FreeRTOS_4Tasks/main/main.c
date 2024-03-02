@@ -42,26 +42,26 @@ static void Task1(void *pvParameters) {
 static void Task2(void *pvParameters) {
 	printf("I am at Task2 ...\n");
     TickType_t xLastWakeTime;
-    const TickType_t xFrequency = pdMS_TO_TICKS(100);	//10
+    const TickType_t xFrequency = pdMS_TO_TICKS(10);	//10
 
     while (1) {
         printf("           Tsk2-P2 <-\n");
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
         printf("           Tsk2-P2 ->\n");
-        vTaskDelay(pdMS_TO_TICKS(10));					//250
+        vTaskDelay(pdMS_TO_TICKS(250));					//250
     }
 }
 
 static void Task3(void *pvParameters) {
     printf("I am at Task3 ...\n");
-	char rx_data[1] = {'L'};
+	char rx_data[1];
     esp_rom_gpio_pad_select_gpio(LED_PIN);
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
     while (1) {
         printf("                      Tsk3-P3 <-\n");
         xSemaphoreTake(semUART, portMAX_DELAY);
-        //uart_read_bytes(UART_NUM, rx_data, sizeof(rx_data), portMAX_DELAY);
+        uart_read_bytes(UART_NUM, rx_data, sizeof(rx_data), portMAX_DELAY);
         printf("Received character: %c\n", rx_data[0]);
         if (rx_data[0] == 'L' || rx_data[0] == 'l') {
             gpio_set_level(LED_PIN, 1);
